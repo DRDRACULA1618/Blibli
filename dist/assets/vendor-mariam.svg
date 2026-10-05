@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9bd6ff"/><stop offset="1" stop-color="#ffe68a"/></linearGradient>
+    <linearGradient id="fruit" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe752"/><stop offset="1" stop-color="#7b3108"/></linearGradient>
+  </defs>
+  <rect width="800" height="520" fill="url(#bg)"/>
+  <rect y="340" width="800" height="180" fill="#30312b"/>
+  <g opacity=".45"><rect x="520" y="90" width="210" height="210" fill="#f5f0d8"/><rect x="80" y="70" width="120" height="220" fill="#efe9cf"/></g>
+  <circle cx="275" cy="182" r="66" fill="#73381f"/>
+  <path d="M198 162c20-96 144-116 180-18-65-24-116-12-180 18z" fill="#ed2e2e"/>
+  <path d="M178 424c6-150 48-221 104-221 77 0 125 90 126 221z" fill="#167a7a"/>
+  <rect x="80" y="320" width="645" height="112" rx="18" fill="#171412"/>
+  <g stroke="#050505" stroke-width="9"><path d="M98 345h608M98 380h608M98 414h608"/></g>
+  <g fill="url(#fruit)" stroke="#5c2508" stroke-width="7">
+    <path d="M110 315c68-60 135-54 185 1-53 27-126 31-185-1z"/>
+    <path d="M284 328c66-70 145-62 199 0-62 31-139 35-199 0z"/>
+    <path d="M491 318c66-66 139-57 188 1-57 28-130 31-188-1z"/>
+  </g>
+  <g opacity=".65" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round"><path d="M177 293c-26-53 29-74 4-119"/><path d="M421 297c-34-64 37-81 7-134"/></g>
+</svg>

@@ -1,0 +1,22 @@
+{
+  "name": "blibli-pwa",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BliBli — carte participative des vendeuses de banane braisée à Abidjan.",
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 5173",
+    "build": "node scripts/build.mjs",
+    "preview": "python3 -m http.server 4173 -d dist",
+    "check": "node scripts/check.mjs"
+  },
+  "keywords": [
+    "pwa",
+    "abidjan",
+    "banane-braisee",
+    "carte-participative",
+    "openstreetmap",
+    "capacitor"
+  ],
+  "license": "MIT"
+}

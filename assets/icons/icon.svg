@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="118" fill="#ffc400"/>
+  <path d="M237 168c-34-43-12-84 15-116 4 35 38 41 46 76 8 30-12 61-44 73 12-21 5-40-17-62z" fill="#ff5a00"/>
+  <path d="M130 190c88 49 181 45 274-13-20 99-105 161-196 147-69-11-117-62-134-119 17-10 36-18 56-15z" fill="#fff0a4" stroke="#161616" stroke-width="24" stroke-linejoin="round"/>
+  <text x="256" y="425" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="118" letter-spacing="-10" fill="#151515">BB</text>
+</svg>

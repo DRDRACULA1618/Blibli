@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffc400" />
+    <meta name="description" content="BliBli, la carte participative des vendeuses de banane braisée à Abidjan." />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BliBli" />
+    <meta property="og:title" content="BliBli — Où est la banane braisée ?" />
+    <meta property="og:description" content="Trouve et signale une vendeuse de banane braisée près de toi à Abidjan." />
+    <meta property="og:image" content="./assets/icons/icon-512.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./assets/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+    <link rel="preconnect" href="https://tile.openstreetmap.org" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>BliBli — Banane braisée à Abidjan</title>
+  </head>
+  <body>
+    <div id="app" aria-live="polite"></div>
+    <noscript>BliBli nécessite JavaScript pour afficher la carte participative.</noscript>
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

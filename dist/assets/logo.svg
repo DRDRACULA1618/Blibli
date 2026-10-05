@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 180" role="img" aria-labelledby="title desc">
+  <title id="title">Logo BliBli</title>
+  <desc id="desc">Une banane jaune sous une flamme orange au-dessus du mot BliBli.</desc>
+  <defs>
+    <linearGradient id="fire" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#ff7a00"/>
+      <stop offset="1" stop-color="#ff3d00"/>
+    </linearGradient>
+    <linearGradient id="banana" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffe56d"/>
+      <stop offset="1" stop-color="#ffc400"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(141 4)">
+    <path d="M70 51c-14-18-5-33 7-47 1 14 14 17 17 30 3 12-5 25-18 30 5-9 2-15-6-23z" fill="url(#fire)"/>
+    <path d="M37 47c26 14 54 13 82-4-6 29-31 47-58 43-20-3-35-18-40-35 5-3 10-5 16-4z" fill="url(#banana)" stroke="#18130d" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M30 39c5-8 15-11 23-6" fill="none" stroke="#18130d" stroke-width="7" stroke-linecap="round"/>
+    <path d="M116 37c-1-8-9-14-18-13" fill="none" stroke="#18130d" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <text x="210" y="145" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="88" letter-spacing="-7" fill="#151515">BliBli</text>
+  <circle cx="342" cy="122" r="9" fill="#ff8a00"/>
+</svg>

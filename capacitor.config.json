@@ -1,0 +1,9 @@
+{
+  "appId": "ci.blibli.app",
+  "appName": "BliBli",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}
