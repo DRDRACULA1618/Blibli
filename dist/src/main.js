@@ -1,5 +1,5 @@
 import { initStore, store } from './store.js';
-import { destroyMap, mountVendorMap } from './map.js';
+import { DEFAULT_LOCATION_RADIUS_METERS, destroyMap, mountVendorMap } from './map.js';
 import {
   addStepOneView,
   addStepThreeView,
@@ -37,7 +37,8 @@ const ui = {
   pendingAction: null,
   toast: null,
   mapController: null,
-  installPrompt: null
+  installPrompt: null,
+  autoLocationAttempted: false
 };
 
 let toastTimer = null;
@@ -127,12 +128,26 @@ async function afterRender(screen, param) {
     ui.mapController = await mountVendorMap(document.querySelector('#vendor-map'), vendors, {
       center: state.userLocation ? [state.userLocation.lat, state.userLocation.lng] : ABIDJAN_CENTER,
       zoom: state.userLocation ? 14 : 12,
+      userLocation: state.userLocation,
+      locationRadiusMeters: DEFAULT_LOCATION_RADIUS_METERS,
+      fitUserLocation: Boolean(state.userLocation),
+      locationPaddingTop: 150,
       selectedVendorId: ui.selectedVendorId,
       onSelect(vendorId) {
         ui.selectedVendorId = vendorId;
         render();
       }
     });
+
+    if (!ui.autoLocationAttempted && ui.mapController?.locate) {
+      ui.autoLocationAttempted = true;
+      try {
+        const position = await ui.mapController.locate();
+        store.setUserLocation(position);
+      } catch (error) {
+        showToast(error.message || 'Position indisponible.', 'error');
+      }
+    }
   }
 
   if (screen === 'add' && (param || '1') === '1') {

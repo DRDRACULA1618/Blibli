@@ -13,7 +13,8 @@ Ce dépôt contient un **premier jet fonctionnel et GitHub-ready** conforme à l
 - fiche détaillée et lancement d’un itinéraire sans compte ;
 - favoris enregistrés dans le navigateur ;
 - ajout participatif en trois étapes ;
-- géolocalisation et déplacement du marqueur ;
+- géolocalisation automatique, point bleu et cadrage par défaut sur un rayon de 2 km ;
+- carte arrêtée au-dessus de la navigation pour garder les boutons du bas visibles ;
 - détection d’un point situé à moins de 80 mètres ;
 - connexion de démonstration avant une contribution ;
 - confirmation « Je la vois ici maintenant » ;

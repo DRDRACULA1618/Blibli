@@ -3,6 +3,8 @@ import { ABIDJAN_CENTER, clamp, vendorStatus } from './utils.js';
 let activeMap = null;
 let activeFallbackCleanup = null;
 
+export const DEFAULT_LOCATION_RADIUS_METERS = 2000;
+
 const CITY_BOUNDS = {
   minLat: 5.27,
   maxLat: 5.43,
@@ -51,6 +53,10 @@ function positionHtml() {
   return `<span class="draft-pin"><span>🔥</span></span>`;
 }
 
+function userPositionHtml() {
+  return `<span class="fallback-user-dot"><span></span></span>`;
+}
+
 function fallbackPosition(lat, lng) {
   const x = ((lng - CITY_BOUNDS.minLng) / (CITY_BOUNDS.maxLng - CITY_BOUNDS.minLng)) * 100;
   const y = (1 - (lat - CITY_BOUNDS.minLat) / (CITY_BOUNDS.maxLat - CITY_BOUNDS.minLat)) * 100;
@@ -64,6 +70,17 @@ function fallbackCoordinates(event, container) {
   return {
     lat: CITY_BOUNDS.minLat + (1 - y) * (CITY_BOUNDS.maxLat - CITY_BOUNDS.minLat),
     lng: CITY_BOUNDS.minLng + x * (CITY_BOUNDS.maxLng - CITY_BOUNDS.minLng)
+  };
+}
+
+function fallbackRadiusSize(position, radiusMeters) {
+  const latitudeMeters = 111_320;
+  const longitudeMeters = Math.max(1, latitudeMeters * Math.cos((position.lat * Math.PI) / 180));
+  const latitudeRadius = radiusMeters / latitudeMeters;
+  const longitudeRadius = radiusMeters / longitudeMeters;
+  return {
+    width: clamp((longitudeRadius * 2 * 100) / (CITY_BOUNDS.maxLng - CITY_BOUNDS.minLng), 5, 100),
+    height: clamp((latitudeRadius * 2 * 100) / (CITY_BOUNDS.maxLat - CITY_BOUNDS.minLat), 5, 100)
   };
 }
 
@@ -86,6 +103,30 @@ function mountFallback(container, vendors, options) {
 
   const renderMarkers = () => {
     markerLayer.innerHTML = '';
+
+    if (options.userLocation) {
+      const pos = fallbackPosition(options.userLocation.lat, options.userLocation.lng);
+      const radius = fallbackRadiusSize(
+        options.userLocation,
+        options.locationRadiusMeters || DEFAULT_LOCATION_RADIUS_METERS
+      );
+
+      const radiusElement = document.createElement('div');
+      radiusElement.className = 'fallback-location-radius';
+      radiusElement.style.left = `${pos.x}%`;
+      radiusElement.style.top = `${pos.y}%`;
+      radiusElement.style.width = `${radius.width}%`;
+      radiusElement.style.height = `${radius.height}%`;
+      markerLayer.appendChild(radiusElement);
+
+      const locationElement = document.createElement('div');
+      locationElement.className = 'fallback-user-location';
+      locationElement.style.left = `${pos.x}%`;
+      locationElement.style.top = `${pos.y}%`;
+      locationElement.innerHTML = userPositionHtml();
+      markerLayer.appendChild(locationElement);
+    }
+
     for (const vendor of vendors) {
       const pos = fallbackPosition(vendor.lat, vendor.lng);
       const wrapper = document.createElement('div');
@@ -125,10 +166,23 @@ function mountFallback(container, vendors, options) {
 
   return {
     locate() {
-      return locateBrowser(options.onPositionChange);
+      return locateBrowser((position) => {
+        if (options.selectable) {
+          options.selectedPosition = position;
+          options.onPositionChange?.(position);
+        } else {
+          options.userLocation = position;
+          options.onUserLocationChange?.(position);
+        }
+        renderMarkers();
+      });
     },
     setPosition(position) {
       options.selectedPosition = position;
+      renderMarkers();
+    },
+    setUserLocation(position) {
+      options.userLocation = position;
       renderMarkers();
     }
   };
@@ -161,9 +215,14 @@ export async function mountVendorMap(container, vendors, options = {}) {
     zoom: options.zoom || 12,
     selectedVendorId: options.selectedVendorId || null,
     selectedPosition: options.selectedPosition || null,
+    userLocation: options.userLocation || null,
+    locationRadiusMeters: Number(options.locationRadiusMeters) || DEFAULT_LOCATION_RADIUS_METERS,
+    fitUserLocation: options.fitUserLocation !== false,
+    locationPaddingTop: Number(options.locationPaddingTop) || 24,
     selectable: Boolean(options.selectable),
     onSelect: options.onSelect,
-    onPositionChange: options.onPositionChange
+    onPositionChange: options.onPositionChange,
+    onUserLocationChange: options.onUserLocationChange
   };
 
   const L = await waitForLeaflet();
@@ -178,6 +237,10 @@ export async function mountVendorMap(container, vendors, options = {}) {
     tap: true
   }).setView(config.center, config.zoom);
   activeMap = map;
+
+  map.createPane('blibliUserLocationPane');
+  map.getPane('blibliUserLocationPane').style.zIndex = '650';
+  map.getPane('blibliUserLocationPane').style.pointerEvents = 'none';
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -197,6 +260,50 @@ export async function mountVendorMap(container, vendors, options = {}) {
   }
 
   let draftMarker = null;
+  let userLocationMarker = null;
+  let userLocationRadius = null;
+
+  const fitLocationRadius = (position) => {
+    const bounds = L.latLng(position.lat, position.lng).toBounds(config.locationRadiusMeters * 2);
+    map.fitBounds(bounds, {
+      animate: false,
+      maxZoom: 16,
+      paddingTopLeft: [24, config.locationPaddingTop],
+      paddingBottomRight: [24, 24]
+    });
+  };
+
+  const setUserLocation = (position, { fit = true } = {}) => {
+    config.userLocation = position;
+    userLocationMarker?.remove();
+    userLocationRadius?.remove();
+
+    userLocationRadius = L.circle([position.lat, position.lng], {
+      radius: config.locationRadiusMeters,
+      color: '#1464ce',
+      weight: 2,
+      opacity: 0.72,
+      fillColor: '#2f80ed',
+      fillOpacity: 0.08,
+      interactive: false,
+      className: 'current-location-radius'
+    }).addTo(map);
+
+    userLocationMarker = L.circleMarker([position.lat, position.lng], {
+      pane: 'blibliUserLocationPane',
+      radius: 8,
+      color: '#ffffff',
+      weight: 3,
+      opacity: 1,
+      fillColor: '#1464ce',
+      fillOpacity: 1,
+      interactive: false,
+      className: 'current-location-dot'
+    }).addTo(map);
+
+    if (fit) fitLocationRadius(position);
+  };
+
   const setPosition = (position, { center = true } = {}) => {
     config.selectedPosition = position;
     if (draftMarker) draftMarker.remove();
@@ -211,6 +318,7 @@ export async function mountVendorMap(container, vendors, options = {}) {
   };
 
   if (config.selectedPosition) setPosition(config.selectedPosition, { center: false });
+  if (config.userLocation) setUserLocation(config.userLocation, { fit: config.fitUserLocation });
 
   if (config.selectable) {
     map.on('click', ({ latlng }) => {
@@ -225,10 +333,16 @@ export async function mountVendorMap(container, vendors, options = {}) {
   return {
     map,
     setPosition,
+    setUserLocation,
     locate() {
       return locateBrowser((position) => {
-        setPosition(position);
-        config.onPositionChange?.(position);
+        if (config.selectable) {
+          if (activeMap === map) setPosition(position);
+          config.onPositionChange?.(position);
+        } else {
+          if (activeMap === map) setUserLocation(position);
+          config.onUserLocationChange?.(position);
+        }
       });
     },
     centerOn(position, zoom = 15) {

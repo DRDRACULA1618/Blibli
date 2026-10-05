@@ -309,7 +309,7 @@ svg.icon {
 /* Bottom navigation */
 .bottom-nav {
   position: fixed;
-  z-index: 60;
+  z-index: 700;
   bottom: 0;
   left: 50%;
   display: grid;
@@ -378,9 +378,10 @@ svg.icon {
 .map-screen {
   height: 100vh;
   height: 100dvh;
-  padding-bottom: 0;
+  padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom));
   overflow: hidden;
   background: #e9efe9;
+  isolation: isolate;
 }
 
 .map-topbar {
@@ -464,9 +465,12 @@ svg.icon {
 }
 
 .map-canvas {
+  position: relative;
+  z-index: 0;
   width: 100%;
   height: 100%;
-  min-height: 420px;
+  min-height: 0;
+  overflow: hidden;
   background: #dfe9dd;
 }
 
@@ -508,12 +512,12 @@ svg.icon {
 }
 
 .leaflet-control-attribution {
-  margin-bottom: calc(var(--nav-height) + 4px) !important;
+  margin-bottom: 4px !important;
   font-size: 9px !important;
 }
 
 .leaflet-bottom.leaflet-right {
-  bottom: calc(var(--nav-height) + 66px);
+  bottom: 78px;
 }
 
 .leaflet-blibli-marker {
@@ -648,6 +652,48 @@ svg.icon {
   position: absolute;
   inset: 0;
   z-index: 4;
+}
+
+.fallback-location-radius {
+  position: absolute;
+  z-index: 1;
+  background: rgba(47, 128, 237, 0.1);
+  border: 2px solid rgba(20, 100, 206, 0.72);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.fallback-user-location {
+  position: absolute;
+  z-index: 7;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.fallback-user-dot {
+  position: relative;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  background: #1464ce;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(20, 100, 206, 0.45);
+}
+
+.fallback-user-dot::before {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  content: '';
+  border: 2px solid rgba(20, 100, 206, 0.28);
+  border-radius: 50%;
+}
+
+.current-location-dot {
+  filter: drop-shadow(0 2px 5px rgba(20, 100, 206, 0.45));
 }
 
 .fallback-marker {

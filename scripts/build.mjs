@@ -21,6 +21,6 @@ for (const item of items) {
 await cp(resolve(root, 'index.html'), resolve(dist, '404.html'));
 await writeFile(
   resolve(dist, 'build.json'),
-  JSON.stringify({ version: '0.1.0', builtAt: new Date().toISOString() }, null, 2)
+  JSON.stringify({ version: '0.2.0', builtAt: new Date().toISOString() }, null, 2)
 );
 console.log(`BliBli construit dans ${dist}`);

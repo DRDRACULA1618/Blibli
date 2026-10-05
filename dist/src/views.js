@@ -107,7 +107,7 @@ export function mapView(state, ui) {
       </header>
       <div id="vendor-map" class="map-canvas" aria-label="Carte des vendeuses"></div>
       <button class="floating-locate" data-action="locate-me" aria-label="Me localiser">${icon('locate')}</button>
-      <div class="map-count"><strong>${ui.filteredCount ?? state.vendors.length}</strong> point${(ui.filteredCount ?? state.vendors.length) > 1 ? 's' : ''} visible${(ui.filteredCount ?? state.vendors.length) > 1 ? 's' : ''}</div>
+      <div class="map-count"><strong>${ui.filteredCount ?? state.vendors.length}</strong> point${(ui.filteredCount ?? state.vendors.length) > 1 ? 's' : ''} visible${(ui.filteredCount ?? state.vendors.length) > 1 ? 's' : ''}${state.userLocation ? '<span> · rayon 2 km</span>' : ''}</div>
       ${bottomNav('map')}
       ${selected ? vendorSheet(selected, state) : ''}
     </main>`;
